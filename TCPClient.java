@@ -11,7 +11,7 @@ public class TCPClient
 		BufferedReader in = null; // for reading form ServerRouter
 		InetAddress addr = InetAddress.getLocalHost();
 		String host = addr.getHostAddress(); // Client machine's IP
-		String routerName = "j263-08.cse1.spsu.edu"; // ServerRouter host name
+		String routerName = "192.168.0.100"; // ServerRouter host name - Raspberry Pi
 		int SockNum = 5555; // port number
 
 		// Tries to connect to the ServerRouter
@@ -37,12 +37,12 @@ public class TCPClient
 		BufferedReader fromFile =  new BufferedReader(reader); // reader for the string file
 		String fromServer; // messages received from ServerRouter
 		String fromUser; // messages sent to ServerRouter
-		String address ="10.5.2.109"; // destination IP (Server)
+		String address = "192.168.0.101"; // destination IP (Server) - laptop
 		long t0, t1, t;
 
-		// Communication process (initial sends/receives
-		out.println(address);// initial send (IP of the destination Server)
-		fromServer = in.readLine();//initial receive from router (verification of connection)
+		// Communication process (initial sends/receives)
+		out.println(address); // initial send (IP of the destination Server)
+		fromServer = in.readLine(); // initial receive from router (verification of connection)
 		System.out.println("ServerRouter: " + fromServer);
 		out.println(host); // Client sends the IP of its machine as initial send
 		t0 = System.currentTimeMillis();

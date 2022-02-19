@@ -1,0 +1,3 @@
+client (desktop): 	192.168.0.103
+router (rpi):		192.168.0.100
+server (laptop):	192.168.0.101
