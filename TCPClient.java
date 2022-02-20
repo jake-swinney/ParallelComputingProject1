@@ -41,14 +41,13 @@ public class TCPClient
 		System.out.println("Do you want to send a text file? (Y/N)");
 		String input = scan.nextLine();
 		out.println(input);
+		scan.close();
 
 		//Text file
 		if(input.toUpperCase().equals("Y"))
 		{
 			// Variables for message passing
-			Reader reader = new FileReader("file.txt");
-			System.out.println("Please input file path:");
-			scan.close();
+			Reader reader = new FileReader(path);
 
 			BufferedReader fromFile =  new BufferedReader(reader); // reader for the string file
 			String fromServer; // messages received from ServerRouter
