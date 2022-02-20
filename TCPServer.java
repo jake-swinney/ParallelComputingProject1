@@ -53,6 +53,7 @@ public class TCPServer
 			out.println(fromServer); // sending the converted message back to the Client via ServerRouter
 		}
 
+		System.out.println("Closing connection.");
 		// closing connections
 		out.close();
 		in.close();

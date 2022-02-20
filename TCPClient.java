@@ -64,8 +64,15 @@ public class TCPClient
 				out.println(fromUser); // sending the strings to the Server via ServerRouter
 				t0 = System.currentTimeMillis();
 			}
+			else
+			{
+                System.out.println("File read finished. Sending 'Bye.'.");
+                out.println("Bye.");
+                break;
+            }
 		}
 
+        System.out.println("Closing connection.");
 		// closing connections
 		out.close();
 		in.close();
