@@ -79,10 +79,26 @@ public class SThread extends Thread
                         String numBytesStr = inputLine.substring(7);
                         int numBytes = Integer.parseInt(numBytesStr);
                         byte[] data = new byte[numBytes];
+                        int bytesRead;
+                        int current;
                         
-                        inSocket.getInputStream().read(data, 0, numBytes);
+                        System.out.println("Transmitting " + numBytes + " bytes.");
                         
-                        outSocket.getOutputStream().write(data, 0, data.length);
+                        InputStream inStream = inSocket.getInputStream();
+                        
+                        bytesRead = inStream.read(data, 0, numBytes);
+                        current = bytesRead;
+                        
+                        do {
+                            bytesRead = inStream.read(data, current, (numBytes - current));
+                            if (bytesRead >= 0) current += bytesRead;
+                        } while (bytesRead > -1);
+                        
+                        OutputStream outStream = outSocket.getOutputStream();
+                        outStream.write(data, 0, numBytes);
+                        outStream.flush();
+                        
+                        System.out.println("Bytes transferred.");
                     }
                 }
             } // end while

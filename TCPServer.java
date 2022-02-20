@@ -54,7 +54,22 @@ public class TCPServer
                 int numBytes = Integer.parseInt(numBytesStr);
                 byte[] data = new byte[numBytes];
                 
-                Socket.getInputStream().read(data, 0, numBytes);
+                int bytesRead;
+                int current;
+                
+                System.out.println("Receiving " + numBytes + " bytes.");
+                
+                InputStream inStream = Socket.getInputStream();
+                
+                bytesRead = inStream.read(data, 0, numBytes);
+                current = bytesRead;
+                
+                do {
+                    bytesRead = inStream.read(data, current, (numBytes - current));
+                    if (bytesRead >= 0) current += bytesRead;
+                } while (bytesRead > -1);
+                
+                System.out.println("Bytes transferred.");
                 
                 FileOutputStream fos = new FileOutputStream("file"); // TODO: name
                 BufferedOutputStream bos = new BufferedOutputStream(fos);
