@@ -38,19 +38,43 @@ public class TCPServer
 		String address = "192.168.0.103"; // destination IP (Client) - desktop
 
 		// Communication process (initial sends/receives)
+		String path = in.readLine();
+		String input = in.readLine();
 		out.println(address); // initial send (IP of the destination Client)
 		fromClient = in.readLine();// initial receive from router (verification of connection)
 		System.out.println("ServerRouter: " + fromClient);
 
-		// Communication while loop
-		while ((fromClient = in.readLine()) != null)
+		if(input.equals("Y"))
 		{
-			System.out.println("Client said: " + fromClient);
-			if (fromClient.equals("Bye.")) // exit statement
-				break;
-			fromServer = fromClient.toUpperCase(); // converting received message to upper case
-			System.out.println("Server said: " + fromServer);
-			out.println(fromServer); // sending the converted message back to the Client via ServerRouter
+			// Communication while loop
+			while ((fromClient = in.readLine()) != null)
+			{
+				System.out.println("Client said: " + fromClient);
+				if (fromClient.equals("Bye.")) // exit statement
+					break;
+				fromServer = fromClient.toUpperCase(); // converting received message to upper case
+				System.out.println("Server said: " + fromServer);
+				out.println(fromServer); // sending the converted message back to the Client via ServerRouter
+			}
+		}
+		else
+		{
+			String[] pathSplit = path.split(".");
+			String ext = pathSplit[pathSplit.length - 1];
+
+			byte[] bytes = new byte[16 * 1024];
+			File f = new File("test." + ext);
+			InputStream inFile = Socket.getInputStream();
+			OutputStream outFile = new FileOutputStream(f);
+
+			int count;
+			while((count = inFile.read(bytes)) > 0)
+			{
+				outFile.write(bytes, 0, count);
+			}
+
+			outFile.close();
+			inFile.close();
 		}
 
 		// closing connections

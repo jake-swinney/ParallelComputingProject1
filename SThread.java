@@ -8,8 +8,11 @@ public class SThread extends Thread
 	private Object [][] RTable; // routing table
 	private PrintWriter out, outTo; // writers (for writing back to the machine and to destination)
 	private BufferedReader in; // reader (for reading from the machine connected to)
+	private InputStream inFile;
+	private OutputStream outFile;
 	private String inputLine, outputLine, destination, addr; // communication strings
 	private Socket outSocket; // socket for communicating with a destination
+	private Socket inSocket; //client side
 	private int ind; // indext in the routing table
 
 	// Constructor
@@ -17,6 +20,8 @@ public class SThread extends Thread
 	{
 		out = new PrintWriter(toClient.getOutputStream(), true);
 		in = new BufferedReader(new InputStreamReader(toClient.getInputStream()));
+		inFile = toClient.getInputStream();
+		outFile = toClient.getOutputStream();
 		RTable = Table;
 		addr = toClient.getInetAddress().getHostAddress();
 		RTable[index][0] = addr; // IP addresses
@@ -30,6 +35,8 @@ public class SThread extends Thread
 		try
 		{
 			// Initial sends/receives
+			String path = in.readLine();
+			String input = in.readLine();
 			destination = in.readLine(); // initial read (the destination for writing)
 			System.out.println("Forwarding to " + destination);
 			out.println("Connected to the router."); // confirmation of connection
@@ -55,19 +62,32 @@ public class SThread extends Thread
 				}
 			}
 
-			// Communication loop
-			while ((inputLine = in.readLine()) != null)
+			if(input.equals("Y"))
 			{
-				System.out.println("Client/Server said: " + inputLine);
-				if (inputLine.equals("Bye.")) // exit statement
-					break;
-				outputLine = inputLine; // passes the input from the machine to the output string for the destination
-
-				if (outSocket != null)
+				// Communication loop
+				while ((inputLine = in.readLine()) != null)
 				{
-					outTo.println(outputLine); // writes to the destination
+					System.out.println("Client/Server said: " + inputLine);
+					if (inputLine.equals("Bye.")) // exit statement
+						break;
+					outputLine = inputLine; // passes the input from the machine to the output string for the destination
+
+					if (outSocket != null)
+					{
+						outTo.println(outputLine); // writes to the destination
+					}
+				}// end while
+			}
+			else
+			{
+				byte[] bytes = new byte[16 * 1024];
+
+				int count;
+				while((count = inFile.read(bytes)) > 0)
+				{
+					outFile.write(bytes, 0, count);
 				}
-			}// end while
+			}
 		}// end try
 		catch (IOException e)
 		{
