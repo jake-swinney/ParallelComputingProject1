@@ -1,6 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.util.Scanner;
 
 public class TCPClient
 {
@@ -86,6 +85,7 @@ public class TCPClient
                 {
                     System.out.println("File read finished. Sending 'Bye.'.");
                     out.println("Bye.");
+                    fromFile.close();
                     break;
                 }
             }
@@ -108,6 +108,7 @@ public class TCPClient
             byte[] data = new byte[(int) f.length()];
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(f));
             bis.read(data, 0, data.length);
+            bis.close();
 
             // Send the server the size of the file
             fromUser = "!BYTES:" + data.length;
