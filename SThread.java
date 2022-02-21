@@ -25,8 +25,20 @@ public class SThread extends Thread
         RTable[index][0] = addr; // IP addresses
         RTable[index][1] = toClient; // sockets for communication
         ind = index;
+	}
 
-        inSocket = toClient;
+	// Run method (will run for each machine that connects to the ServerRouter)
+	public void run()
+	{
+		try
+		{
+			// Initial sends/receives
+			String path = in.readLine();
+			String input = in.readLine();
+			destination = in.readLine(); // initial read (the destination for writing)
+			System.out.println("Forwarding to " + destination);
+			out.println("Connected to the router."); // confirmation of connection
+      inSocket = toClient;
     }
 
     // Run method (will run for each machine that connects to the ServerRouter)
