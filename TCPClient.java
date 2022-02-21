@@ -98,6 +98,14 @@ public class TCPClient
             System.out.println("ServerRouter: " + fromServer);
             out.println(host);
             
+            while ((fromServer = in.readLine()) != null)
+            {
+                System.out.println("Server: " + fromServer);
+                break;
+            }
+            
+            System.out.println("Going to transmit binary file.");
+            
             byte[] data = new byte[(int) f.length()];
             //FileInputStream fis = new FileInputStream(f);
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(f));
@@ -110,6 +118,7 @@ public class TCPClient
             
             System.out.println("Transmitted " + data.length + " bytes.");
             
+            out.println("Bye.");
         }
 
         System.out.println("Closing connection.");
