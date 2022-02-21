@@ -39,8 +39,10 @@ public class TCPServer
 
         // Communication process (initial sends/receives)
         out.println(address); // initial send (IP of the destination Client)
-        fromClient = in.readLine();// initial receive from router (verification of connection)
+        fromClient = in.readLine(); // initial receive from router (verification of connection)
         System.out.println("ServerRouter: " + fromClient);
+
+        String fileName = null;
 
         // Communication while loop
         while ((fromClient = in.readLine()) != null)
@@ -48,37 +50,54 @@ public class TCPServer
             System.out.println("Client said: " + fromClient);
             if (fromClient.equals("Bye.")) // exit statement
                 break;
+            else if (fromClient.startsWith("!FILENAME:"))
+            {
+                fileName = fromClient.substring(10);
+                System.out.println("Received file name: " + fileName);
+            }
             else if (fromClient.startsWith("!BYTES:"))
             {
+                if (fileName == null)
+                {
+                    System.out.println("File name was never received.");
+                    break;
+                }
+
+                // Get the number of bytes from the string first
                 String numBytesStr = fromClient.substring(7);
                 int numBytes = Integer.parseInt(numBytesStr);
-                byte[] data = new byte[numBytes];
-                
+                byte[] data = new byte[numBytes];  // the buffer for the data
+
+                // Receive data
                 int bytesRead;
                 int current;
-                
+
                 System.out.println("Receiving " + numBytes + " bytes.");
-                
+
                 InputStream inStream = Socket.getInputStream();
-                
+
                 bytesRead = inStream.read(data, 0, numBytes);
                 current = bytesRead;
-                
+
                 do {
                     bytesRead = inStream.read(data, current, (numBytes - current));
-                    if (bytesRead >= 0) current += bytesRead;
-                } while (bytesRead > -1);
-                
-                System.out.println("Bytes transferred.");
-                
-                FileOutputStream fos = new FileOutputStream("file"); // TODO: name
-                BufferedOutputStream bos = new BufferedOutputStream(fos);
-                bos.write(data, 0, numBytes);
-                
-                System.out.println("Wrote " + numBytes + " bytes to file.");
-                
-                if (fos != null) fos.close();
-                if (bos != null) bos.close();
+                    if (bytesRead > 0) current += bytesRead;
+                } while (bytesRead > -1 && current < numBytes);
+
+                System.out.println("Bytes received.");
+
+                // Write data to file
+                BufferedOutputStream fileOut = new BufferedOutputStream(new FileOutputStream(fileName));
+                fileOut.write(data, 0, numBytes);
+
+                System.out.println("Wrote " + numBytes + " bytes to file " + fileName);
+
+                if (fileOut != null) fileOut.close();
+
+                // Close the connection after file is received
+                fromServer = "Bye.";
+                System.out.println("Server said: " + fromServer);
+                out.println(fromServer);
                 break;
             }
             else

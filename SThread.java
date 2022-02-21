@@ -11,7 +11,7 @@ public class SThread extends Thread
     private String inputLine, outputLine, destination, addr; // communication strings
     private Socket outSocket; // socket for communicating with a destination
     private int ind; // indext in the routing table
-    
+
     // Input socket
     private Socket inSocket;
 
@@ -25,7 +25,7 @@ public class SThread extends Thread
         RTable[index][0] = addr; // IP addresses
         RTable[index][1] = toClient; // sockets for communication
         ind = index;
-        
+
         inSocket = toClient;
     }
 
@@ -80,31 +80,23 @@ public class SThread extends Thread
                         int numBytes = Integer.parseInt(numBytesStr);
                         byte[] data = new byte[numBytes];
                         int bytesRead;
-                        int current;
-                        
+                        int current = 0;
+
                         System.out.println("Receiving " + numBytes + " bytes.");
-                        
+
                         InputStream inStream = inSocket.getInputStream();
-                        
-                        bytesRead = inStream.read(data, 0, numBytes);
-                        current = bytesRead;
-                        
+
                         do {
                             bytesRead = inStream.read(data, current, (numBytes - current));
-                            if (bytesRead >= 0)
-                            {
+                            if (bytesRead > 0)
                                 current += bytesRead;
-                                System.out.println("Current byte: " + current);
-                            }
-                        } while (bytesRead > -1);
-                        
-                        System.out.println("Transmitting bytes.");
-                        
+                        } while (bytesRead > -1 && current < numBytes);
+
+                        System.out.println("Sending bytes.");
+
                         OutputStream outStream = outSocket.getOutputStream();
                         outStream.write(data, 0, numBytes);
                         outStream.flush();
-                        
-                        System.out.println("Bytes transferred.");
                     }
                 }
             } // end while

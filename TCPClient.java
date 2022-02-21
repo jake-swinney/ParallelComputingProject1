@@ -17,7 +17,7 @@ public class TCPClient
             System.out.println("File could not be opened");
             System.exit(1);
         }
-        
+
         // Variables for setting up connection and communication
         Socket Socket = null; // socket to connect with ServerRouter
         PrintWriter out = null; // for writing to ServerRouter
@@ -45,25 +45,23 @@ public class TCPClient
             System.exit(1);
         }
 
+        // Variables for message passing
         String fromServer; // messages received from ServerRouter
         String fromUser; // messages sent to ServerRouter
         String address = "192.168.0.101"; // destination IP (Server) - laptop
-        
+
+        // Communication process (initial sends/receives)
+        out.println(address); // initial send (IP of the destination Server)
+        fromServer = in.readLine(); // initial receive from router (verification of connection)
+        System.out.println("ServerRouter: " + fromServer);
+        out.println(host); // Client sends the IP of its machine as initial send
+
         if (fileName.endsWith(".txt"))
         {
-            // Variables for message passing
             Reader reader = new FileReader(fileName);
             BufferedReader fromFile =  new BufferedReader(reader); // reader for the string file
-            //String fromServer; // messages received from ServerRouter
-            //String fromUser; // messages sent to ServerRouter
-            //String address = "192.168.0.101"; // destination IP (Server) - laptop
             long t0, t1, t;
 
-            // Communication process (initial sends/receives)
-            out.println(address); // initial send (IP of the destination Server)
-            fromServer = in.readLine(); // initial receive from router (verification of connection)
-            System.out.println("ServerRouter: " + fromServer);
-            out.println(host); // Client sends the IP of its machine as initial send
             t0 = System.currentTimeMillis();
 
             // Communication while loop
@@ -93,32 +91,39 @@ public class TCPClient
         }
         else
         {
-            out.println(address);
-            fromServer = in.readLine();
-            System.out.println("ServerRouter: " + fromServer);
-            out.println(host);
-            
+            // Receive first message (server's host) from server
             while ((fromServer = in.readLine()) != null)
             {
                 System.out.println("Server: " + fromServer);
                 break;
             }
-            
-            System.out.println("Going to transmit binary file.");
-            
+
+            // Send the server the name of the file
+            fromUser = "!FILENAME:" + fileName;
+            out.println("Client: " + fromUser);
+            out.println(fromUser);
+
+            // Read the file as bytes
             byte[] data = new byte[(int) f.length()];
-            //FileInputStream fis = new FileInputStream(f);
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(f));
             bis.read(data, 0, data.length);
-            
-            out.println("!BYTES:" + data.length);
+
+            // Send the server the size of the file
+            fromUser = "!BYTES:" + data.length;
+            System.out.println(fromUser);
+            out.println(fromUser);
             OutputStream os = Socket.getOutputStream();
             os.write(data, 0, data.length);
             os.flush();
-            
-            System.out.println("Transmitted " + data.length + " bytes.");
-            
-            out.println("Bye.");
+
+            System.out.println("Sent " + data.length + " bytes.");
+
+            while ((fromServer = in.readLine()) != null)
+            {
+                System.out.println("Server: " + fromServer);
+                if (fromServer.equals("Bye."))
+                    break;
+            }
         }
 
         System.out.println("Closing connection.");
