@@ -100,7 +100,7 @@ public class TCPClient
 
             // Send the server the name of the file
             fromUser = "!FILENAME:" + fileName;
-            out.println("Client: " + fromUser);
+            System.out.println("Client: " + fromUser);
             out.println(fromUser);
 
             // Read the file as bytes
