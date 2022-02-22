@@ -10,6 +10,7 @@ public class TCPClient
             System.out.println("One argument required: fileName");
             System.exit(1);
         }
+
         String fileName = args[0];
         File f = new File(fileName);
         if (!f.exists() || f.isDirectory())
@@ -119,6 +120,7 @@ public class TCPClient
             os.flush();
 
             System.out.println("Sent " + data.length + " bytes.");
+            long t0 = System.currentTimeMillis();
 
             while ((fromServer = in.readLine()) != null)
             {
@@ -126,6 +128,11 @@ public class TCPClient
                 if (fromServer.equals("Bye."))
                     break;
             }
+
+            long t1 = System.currentTimeMillis();
+            long t = t1 - t0;
+            
+            System.out.println("RTT: " + t);
         }
 
         System.out.println("Closing connection.");
