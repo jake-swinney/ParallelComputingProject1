@@ -106,7 +106,7 @@ public class TCPClient
             }
 
             long endTime = System.currentTimeMillis();
-            long totalTime = startTime - endTime;
+            long totalTime = endTime - startTime;
 
             int avgMsgSize = charCount / numMsg;
             long avgMsgTime = totalTime / numMsg;
@@ -116,7 +116,7 @@ public class TCPClient
             csv.createNewFile();
 
             BufferedWriter outCsv = new BufferedWriter(new FileWriter(csv, true));
-            outCsv.write(fileName + "," + avgMsgSize + "," + t + "," + avgMsgTime + "," + rtTime);
+            outCsv.write(fileName + "," + avgMsgSize + "," + t + "," + avgMsgTime + "," + rtTime + "\n");
             outCsv.close();
         }
         else
@@ -172,7 +172,7 @@ public class TCPClient
             csv.createNewFile();
 
             BufferedWriter outCsv = new BufferedWriter(new FileWriter(csv, true));
-            outCsv.write(fileName + "," + data.length + "," + t + "," + rtTime);
+            outCsv.write(fileName + "," + data.length + "," + t + "," + rtTime + "\n");
             outCsv.close();
         }
 
