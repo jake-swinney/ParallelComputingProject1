@@ -156,7 +156,7 @@ public class TCPClient
                 System.out.println("Server: " + fromServer);
                 if (fromServer.equals("Bye."))
                     break;
-                else if(fromServer.startsWith("!RTTime"))
+                else if(fromServer.startsWith("!RTTIME"))
                 {
                     rtTime = fromServer.substring(9);
                 }
