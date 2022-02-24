@@ -48,6 +48,8 @@ public class SThread extends Thread
                 System.out.println("Thread interrupted");
             }
 
+            long t0 = System.currentTimeMillis();
+
             // loops through the routing table to find the destination
             for ( int i=0; i<10; i++)
             {
@@ -58,6 +60,10 @@ public class SThread extends Thread
                     outTo = new PrintWriter(outSocket.getOutputStream(), true); // assigns a writer
                 }
             }
+
+            long t1 = System.currentTimeMillis();
+            long t = t1 - t0;
+            outTo.println("Routing Table Lookup Time: " + t);
 
             // Communication loop
             while ((inputLine = in.readLine()) != null)
