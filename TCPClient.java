@@ -116,7 +116,7 @@ public class TCPClient
             csv.createNewFile();
 
             BufferedWriter outCsv = new BufferedWriter(new FileWriter(csv, true));
-            outCsv.write(fileName + "," + avgMsgSize + "," + t + "," + avgMsgTime + "," + rtTime + "\n");
+            outCsv.write(fileName + "," + avgMsgSize + "," + avgMsgTime + "," + rtTime + "\n");
             outCsv.close();
         }
         else
