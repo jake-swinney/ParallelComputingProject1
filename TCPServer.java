@@ -44,6 +44,7 @@ public class TCPServer
         System.out.println("ServerRouter: " + fromClient);
 
         String fileName = null;
+        String rtMsg = "";
 
         // Communication while loop
         while ((fromClient = in.readLine()) != null)
@@ -59,8 +60,9 @@ public class TCPServer
             else if (fromClient.startsWith("Routing"))
             {
                 rtTime = fromClient.substring(9);
-                System.out.println("!RTTime: " + rtTime);
-                out.println(rtTime);
+                rtMsg = "!RTTime: " + rtTime;
+                System.out.println(rtMsg);
+                out.println(rtMsg);
             }
             else if (fromClient.startsWith("!BYTES:"))
             {
