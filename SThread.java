@@ -63,7 +63,7 @@ public class SThread extends Thread
 
             long t1 = System.currentTimeMillis();
             long t = t1 - t0;
-            outTo.println("Routing Table Lookup Time: " + t);
+            outTo.println("!RTTime: " + t);
 
             // Communication loop
             while ((inputLine = in.readLine()) != null)

@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.nio.file.StandardOpenOption;
 
 public class TCPClient
 {
@@ -63,7 +64,13 @@ public class TCPClient
             BufferedReader fromFile =  new BufferedReader(reader); // reader for the string file
             long t0, t1, t;
 
+            t = 0;
             t0 = System.currentTimeMillis();
+
+            int charCount = 0;
+            int numMsg = 0;
+            long startTime = System.currentTimeMillis();
+            String rtTime = "";
 
             // Communication while loop
             while ((fromServer = in.readLine()) != null)
@@ -72,12 +79,19 @@ public class TCPClient
                 t1 = System.currentTimeMillis();
                 if (fromServer.equals("Bye.")) // exit statement
                     break;
+                else if(fromServer.startsWith("!RTTime"))
+                {
+                    rtTime = fromServer.substring(9);
+                }
+
                 t = t1 - t0;
                 System.out.println("Cycle time: " + t);
 
                 fromUser = fromFile.readLine(); // reading strings from a file
                 if (fromUser != null)
                 {
+                    numMsg++;
+                    charCount += fromUser.length();
                     System.out.println("Client: " + fromUser);
                     out.println(fromUser); // sending the strings to the Server via ServerRouter
                     t0 = System.currentTimeMillis();
@@ -90,6 +104,20 @@ public class TCPClient
                     break;
                 }
             }
+
+            long endTime = System.currentTimeMillis();
+            long totalTime = startTime - endTime;
+
+            int avgMsgSize = charCount / numMsg;
+            long avgMsgTime = totalTime / numMsg;
+
+            //Write stuff to CSV file
+            File csv = new File("data.csv");
+            csv.createNewFile();
+
+            BufferedWriter outCsv = new BufferedWriter(new FileWriter(csv, true));
+            outCsv.write(fileName + "," + avgMsgSize + "," + t + "," + avgMsgTime + "," + rtTime);
+            outCsv.close();
         }
         else
         {
@@ -121,18 +149,31 @@ public class TCPClient
 
             System.out.println("Sent " + data.length + " bytes.");
             long t0 = System.currentTimeMillis();
+            String rtTime = "";
 
             while ((fromServer = in.readLine()) != null)
             {
                 System.out.println("Server: " + fromServer);
                 if (fromServer.equals("Bye."))
                     break;
+                else if(fromServer.startsWith("!RTTime"))
+                {
+                    rtTime = fromServer.substring(9);
+                }
             }
 
             long t1 = System.currentTimeMillis();
             long t = t1 - t0;
             
             System.out.println("RTT: " + t);
+
+            //Write stuff to CSV file
+            File csv = new File("data.csv");
+            csv.createNewFile();
+
+            BufferedWriter outCsv = new BufferedWriter(new FileWriter(csv, true));
+            outCsv.write(fileName + "," + data.length + "," + t + "," + rtTime);
+            outCsv.close();
         }
 
         System.out.println("Closing connection.");
