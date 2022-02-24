@@ -121,9 +121,16 @@ public class TCPClient
         }
         else
         {
+            String rtTime = "";
+
             // Receive first message (server's host) from server
             while ((fromServer = in.readLine()) != null)
             {
+                if(fromServer.startsWith("!RTTIME"))
+                {
+                    rtTime = fromServer.substring(9);
+                }
+
                 System.out.println("Server: " + fromServer);
                 break;
             }
@@ -149,17 +156,12 @@ public class TCPClient
 
             System.out.println("Sent " + data.length + " bytes.");
             long t0 = System.currentTimeMillis();
-            String rtTime = "";
 
             while ((fromServer = in.readLine()) != null)
             {
                 System.out.println("Server: " + fromServer);
                 if (fromServer.equals("Bye."))
                     break;
-                else if(fromServer.startsWith("!RTTIME"))
-                {
-                    rtTime = fromServer.substring(9);
-                }
             }
 
             long t1 = System.currentTimeMillis();
