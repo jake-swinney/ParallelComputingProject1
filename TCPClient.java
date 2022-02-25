@@ -56,10 +56,21 @@ public class TCPClient
         out.println(address); // initial send (IP of the destination Server)
         fromServer = in.readLine(); // initial receive from router (verification of connection)
         System.out.println("ServerRouter: " + fromServer);
+
+        String rtTime = "";
+        fromServer = in.readLine(); // receive RTTime
+        System.out.println("ServerRouter: " + fromServer);
+        if (fromServer.startsWith("!RTTime"))
+        {
+            rtTime = fromServer.substring(9);
+        }
+
         out.println(host); // Client sends the IP of its machine as initial send
 
         if (fileName.endsWith(".txt"))
         {
+            long fileSize = f.length();
+
             Reader reader = new FileReader(fileName);
             BufferedReader fromFile =  new BufferedReader(reader); // reader for the string file
             long t0, t1, t;
@@ -70,7 +81,6 @@ public class TCPClient
             int charCount = 0;
             int numMsg = 0;
             long startTime = System.currentTimeMillis();
-            String rtTime = "";
 
             // Communication while loop
             while ((fromServer = in.readLine()) != null)
@@ -116,20 +126,20 @@ public class TCPClient
             csv.createNewFile();
 
             BufferedWriter outCsv = new BufferedWriter(new FileWriter(csv, true));
-            outCsv.write(fileName + "," + avgMsgSize + "," + avgMsgTime + "," + rtTime + "\n");
+            outCsv.write(fileName + "," + avgMsgSize + "," + avgMsgTime + "," + rtTime + "," + fileSize + "\n");
             outCsv.close();
         }
         else
         {
-            String rtTime = "";
+            //String rtTime = "";
 
             // Receive first message (server's host) from server
             while ((fromServer = in.readLine()) != null)
             {
-                if(fromServer.startsWith("!RTTime"))
+                /*if(fromServer.startsWith("!RTTime"))
                 {
                     rtTime = fromServer.substring(9);
-                }
+                }*/
 
                 System.out.println("Server: " + fromServer);
                 break;

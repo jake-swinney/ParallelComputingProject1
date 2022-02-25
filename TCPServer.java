@@ -43,6 +43,9 @@ public class TCPServer
         fromClient = in.readLine(); // initial receive from router (verification of connection)
         System.out.println("ServerRouter: " + fromClient);
 
+        fromServer = in.readLine(); // receive RTTime
+        System.out.println("ServerRouter: " + fromServer);
+
         String fileName = null;
         String rtMsg = "";
 
@@ -56,13 +59,6 @@ public class TCPServer
             {
                 fileName = fromClient.substring(10);
                 System.out.println("Received file name: " + fileName);
-            }
-            else if (fromClient.startsWith("Routing"))
-            {
-                rtTime = fromClient.substring(9);
-                rtMsg = "!RTTime: " + rtTime;
-                System.out.println(rtMsg);
-                out.println(rtMsg);
             }
             else if (fromClient.startsWith("!BYTES:"))
             {
