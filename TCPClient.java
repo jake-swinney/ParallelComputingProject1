@@ -126,7 +126,7 @@ public class TCPClient
             // Receive first message (server's host) from server
             while ((fromServer = in.readLine()) != null)
             {
-                if(fromServer.startsWith("!RTTIME"))
+                if(fromServer.startsWith("!RTTime"))
                 {
                     rtTime = fromServer.substring(9);
                 }
@@ -166,7 +166,7 @@ public class TCPClient
 
             long t1 = System.currentTimeMillis();
             long t = t1 - t0;
-            
+
             System.out.println("RTT: " + t);
 
             //Write stuff to CSV file
