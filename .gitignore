@@ -2,3 +2,11 @@
 *.class
 
 .vscode/launch.json
+
+# Ignore the data CSV
+*.csv
+
+# Ignore tests
+tests/
+*.mp3
+*.mp4
