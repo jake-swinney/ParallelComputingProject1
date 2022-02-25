@@ -90,17 +90,19 @@ public class SThread extends Thread
                         System.out.println("Receiving " + numBytes + " bytes.");
 
                         InputStream inStream = inSocket.getInputStream();
+                        OutputStream outStream = outSocket.getOutputStream();
 
                         do {
                             bytesRead = inStream.read(data, current, (numBytes - current));
                             if (bytesRead > 0)
+                            {
+                                outStream.write(data, current, bytesRead);
                                 current += bytesRead;
+                            }
                         } while (bytesRead > -1 && current < numBytes);
 
                         System.out.println("Sending bytes.");
 
-                        OutputStream outStream = outSocket.getOutputStream();
-                        outStream.write(data, 0, numBytes);
                         outStream.flush();
                     }
                 }
