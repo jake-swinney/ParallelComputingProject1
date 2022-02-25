@@ -36,7 +36,6 @@ public class TCPServer
         String fromServer; // messages sent to ServerRouter
         String fromClient; // messages received from ServerRouter
         String address = "192.168.0.103"; // destination IP (Client) - desktop
-        String rtTime;
 
         // Communication process (initial sends/receives)
         out.println(address); // initial send (IP of the destination Client)
@@ -47,7 +46,6 @@ public class TCPServer
         System.out.println("ServerRouter: " + fromServer);
 
         String fileName = null;
-        String rtMsg = "";
 
         // Communication while loop
         while ((fromClient = in.readLine()) != null)
