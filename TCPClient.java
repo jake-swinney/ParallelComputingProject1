@@ -160,12 +160,15 @@ public class TCPClient
             fromUser = "!BYTES:" + data.length;
             System.out.println(fromUser);
             out.println(fromUser);
+
+            // Set start time and begin sending the file
+            long t0 = System.currentTimeMillis();
+
             OutputStream os = Socket.getOutputStream();
             os.write(data, 0, data.length);
             os.flush();
 
             System.out.println("Sent " + data.length + " bytes.");
-            long t0 = System.currentTimeMillis();
 
             while ((fromServer = in.readLine()) != null)
             {
