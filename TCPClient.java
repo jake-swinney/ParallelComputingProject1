@@ -131,19 +131,9 @@ public class TCPClient
         }
         else
         {
-            //String rtTime = "";
-
             // Receive first message (server's host) from server
-            while ((fromServer = in.readLine()) != null)
-            {
-                /*if(fromServer.startsWith("!RTTime"))
-                {
-                    rtTime = fromServer.substring(9);
-                }*/
-
+            if ((fromServer = in.readLine()) != null)
                 System.out.println("Server: " + fromServer);
-                break;
-            }
 
             // Send the server the name of the file
             fromUser = "!FILENAME:" + fileName;
